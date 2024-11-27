@@ -25,7 +25,7 @@ export type TStudent = {
   id: string;
   password: string;
   name: TUserName;
-  gender: 'male' | 'female';
+  gender: 'male' | 'female'| 'other';
   dateOfBirth: string;
   email: string;
   contactNo: string;
@@ -41,6 +41,7 @@ export type TStudent = {
 };
 
 export type TStudentMethods = {
+  // eslint-disable-next-line no-unused-vars
   isUserExists(id: string): Promise<TStudent | null>;
 };
 

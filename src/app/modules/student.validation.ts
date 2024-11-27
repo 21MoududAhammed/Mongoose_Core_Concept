@@ -59,8 +59,7 @@ export const studentValidationSchema = z.object({
     .nonempty('Email is required.'),
   contactNo: z
     .string()
-    .regex(/^\d+$/, 'Contact number must contain only digits.')
-    .optional(),
+    .regex(/^\d+$/, 'Contact number must contain only digits.'),
   emergencyContactNo: z
     .string()
     .regex(/^\d+$/, 'Emergency contact number must contain only digits.')

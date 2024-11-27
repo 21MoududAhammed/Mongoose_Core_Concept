@@ -66,7 +66,7 @@ const studentSchema = new Schema<TStudent, TStudentModel, TStudentMethods>(
       required: true,
       unique: true,
     },
-    contactNo: { type: String },
+    contactNo: { type: String , required: true},
     emergencyContactNo: { type: String, required: true },
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
