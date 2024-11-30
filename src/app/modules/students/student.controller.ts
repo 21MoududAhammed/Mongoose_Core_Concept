@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { studentServices } from './student.service';
 // import { studentValidationSchema } from './student.validation';
 // import { z } from 'zod';
@@ -41,7 +41,11 @@ import { studentServices } from './student.service';
 // };
 
 // Controller to retrieve all students
-const getAllStudents = async (req: Request, res: Response):Promise<any> => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<any> => {
   try {
     // Fetch all students from the database
     const result = await studentServices.getAllStudentsFromDB();
@@ -52,18 +56,17 @@ const getAllStudents = async (req: Request, res: Response):Promise<any> => {
       message: 'All students data retrieved successfully!',
       data: result,
     });
-  } catch (err : any) {
-    // Handle errors during data retrieval
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong while fetching all students.',
-      error: err.message,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Controller to retrieve a single student by ID
-const getSingleStudent = async (req: Request, res: Response):Promise<any> => {
+const getSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<any> => {
   try {
     // Extract ID from request parameters
     const id = req.params.id;
@@ -85,25 +88,28 @@ const getSingleStudent = async (req: Request, res: Response):Promise<any> => {
       message: 'Student data retrieved successfully!',
       data: result,
     });
-  } catch (err: any) {
-    // Handle errors during data retrieval
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong while fetching the student.',
-      error: err.message,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
 // delete single student from db
-const deleteSingleStudent = async (req: Request, res: Response): Promise<any> => {
-  const { studentId } = req.params;
-  const result = await studentServices.deleteSingleStudentFromDb(studentId);
-  res.status(200).json({
-    success: true,
-    message: 'Deleted a student successfully!',
-    data: result,
-  });
+const deleteSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<any> => {
+  try {
+    const { studentId } = req.params;
+    const result = await studentServices.deleteSingleStudentFromDb(studentId);
+    res.status(200).json({
+      success: true,
+      message: 'Deleted a student successfully!',
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Export the controllers

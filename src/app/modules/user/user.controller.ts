@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { userServices } from './user.service';
-const createUserStudent = async (req: Request, res: Response) => {
+const createUserStudent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { password, student: studentData } = req.body;
     const result = await userServices.createUserToDB(password, studentData);
@@ -10,11 +10,7 @@ const createUserStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'An unexpected error occurred for creating user',
-      error: err,
-    });
+    next(err)
   }
 };
 
