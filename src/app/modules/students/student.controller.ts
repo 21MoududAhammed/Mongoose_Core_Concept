@@ -1,44 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { studentServices } from './student.service';
-import { studentValidationSchema } from './student.validation';
-import { z } from 'zod';
+// import { studentValidationSchema } from './student.validation';
+// import { z } from 'zod';
 
 // Controller to create a new student
-const createStudent = async (req: Request, res: Response): Promise<any> => {
-  try {
-    // Extracting student info from request body
-    const studentInfo = req.body.student;
-    // Validate student data with Zod schema
-    const validatedStudent = studentValidationSchema.parse(studentInfo);
+// const createStudent = async (req: Request, res: Response): Promise<any> => {
+//   try {
+//     // Extracting student info from request body
+//     const studentInfo = req.body.student;
+//     // Validate student data with Zod schema
+//     const validatedStudent = studentValidationSchema.parse(studentInfo);
 
-    // Pass the validated data to service layer
-    const result = await studentServices.createStudentIntoDB(validatedStudent);
+//     // Pass the validated data to service layer
+//     const result = await studentServices.createStudentIntoDB(validatedStudent);
 
-    // Send success response
-    res.status(201).json({
-      success: true,
-      message: 'Student is created successfully!',
-      data: result,
-    });
-  } catch (err: any) {
-    if (err instanceof z.ZodError) {
-      // Handle validation errors
-      return res.status(400).json({
-        success: false,
-        message: 'Validation error occurred.',
-        errors: err.errors.map((error) => error.message), // Return detailed validation errors
-      });
-    }
+//     // Send success response
+//     res.status(201).json({
+//       success: true,
+//       message: 'Student is created successfully!',
+//       data: result,
+//     });
+//   } catch (err: any) {
+//     if (err instanceof z.ZodError) {
+//       // Handle validation errors
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Validation error occurred.',
+//         errors: err.errors.map((error) => error.message), // Return detailed validation errors
+//       });
+//     }
 
-    // Handle other errors
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong while creating the student.',
-      error: err.message,
-    });
-  }
-};
+//     // Handle other errors
+//     res.status(500).json({
+//       success: false,
+//       message: 'Something went wrong while creating the student.',
+//       error: err.message,
+//     });
+//   }
+// };
 
 // Controller to retrieve all students
 const getAllStudents = async (req: Request, res: Response):Promise<any> => {
@@ -108,7 +108,6 @@ const deleteSingleStudent = async (req: Request, res: Response): Promise<any> =>
 
 // Export the controllers
 export const studentControllers = {
-  createStudent,
   getAllStudents,
   getSingleStudent,
   deleteSingleStudent,

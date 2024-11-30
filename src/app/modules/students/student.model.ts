@@ -1,3 +1,4 @@
+
 import { Schema, model } from 'mongoose';
 import {
   TGuardian,
@@ -7,7 +8,6 @@ import {
   TStudentModel,
   TUserName,
 } from './student.interface';
-import bcrypt from 'bcrypt';
 
 // userName Schema
 const userNameSchema = new Schema<TUserName>({
@@ -50,11 +50,7 @@ const studentSchema = new Schema<TStudent, TStudentModel, TStudentMethods>(
       type: userNameSchema,
       required: true,
     },
-    password: {
-      type: String,
-      required: [true, 'Password is required.'],
-      maxlength: [20, 'Never cross 20 characters.'],
-    },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     gender: {
       type: String,
       enum: ['male', 'female', 'other'],
@@ -66,7 +62,7 @@ const studentSchema = new Schema<TStudent, TStudentModel, TStudentMethods>(
       required: true,
       unique: true,
     },
-    contactNo: { type: String , required: true},
+    contactNo: { type: String, required: true },
     emergencyContactNo: { type: String, required: true },
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
@@ -76,11 +72,7 @@ const studentSchema = new Schema<TStudent, TStudentModel, TStudentMethods>(
       type: String,
       enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
     },
-    isActive: {
-      type: String,
-      enum: { values: ['active', 'blocked'], message: '{VALUE} is not valid!' },
-      default: 'active',
-    },
+
     profileImg: { type: String },
     isDeleted: { type: Boolean, default: false },
   },
@@ -90,31 +82,6 @@ const studentSchema = new Schema<TStudent, TStudentModel, TStudentMethods>(
     },
   },
 );
-
-// user mongoose middlewares
-studentSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
-});
-
-// so that user can't see the password anymore
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
-
-// deduct some data before find
-studentSchema.pre('find', async function (next) {
-  // here this means query data
-  this.find({ isDeleted: { $ne: true } }).select('-password');
-  next();
-});
-
-// deduct deleted data before find one data
-studentSchema.pre('findOne', async function (next) {
-  this.find({ isDeleted: { $ne: true } }).select('-password');
-  next();
-});
 
 studentSchema.method('isUserExists', async function (id: string) {
   return await StudentModel.findOne({ id: id });
